@@ -1,0 +1,8 @@
+tensorflow
+matplotlib
+seaborn
+numpy
+pandas
+requests
+bokeh
+plotly
