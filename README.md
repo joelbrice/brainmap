@@ -1,0 +1,2 @@
+- Create your own branch like this:
+  - name_model
