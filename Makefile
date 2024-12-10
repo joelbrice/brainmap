@@ -8,7 +8,7 @@ install:
 	pip install -r requirements.txt
 
 test:
-    pytest
+	pytest
 
 run:
-    uvicorn app.main:app --reload
+	uvicorn app.main:app --reload
