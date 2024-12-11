@@ -161,3 +161,4 @@ widgetsnbextension==4.0.13
 wrapt==1.17.0
 xyzservices==2024.9.0
 fastapi
+visualkeras
