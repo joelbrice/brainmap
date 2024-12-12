@@ -21,9 +21,12 @@ FROM tensorflow/tensorflow:2.10.0
 
 WORKDIR /prod
 
+
 COPY requirements_prod.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY brainmap brainmap
+
+ENV PORT=8000
 
 CMD uvicorn brainmap.api.fast:app --host 0.0.0.0 --port $PORT
