@@ -1,32 +1,41 @@
 <!-- Tumors, MRI image recognition and AI -->
 
-Contributors
-Gökhan Dede
-Antonio Ferri
-Markus Kaller
-Mosleh Rostami
-Joël Brice Voumo Tiogo – Project Lead
+<!-- the Team -->
+
+Gökhan Dede: add short bio here
+
+Antonio Ferri: add short bio here
+
+Markus Kaller: add short bio here
+
+Mosleh Rostami: add short bio here
+
+Joël Brice Voumo Tiogo – Project Lead: add short bio here
 
 
 <!-- Project outline -->
 
 Objective
 
-The main objective of this project is to create an AI-based tool able to determine with accuracy whether a patient may have a brain tumor in early stages of development.
+The primary aim of this project is to develop an AI-based tool capable of accurately identifying whether a patient has a brain tumor and determining its specific subtype. Differentiating between tumor subtypes is critical for tailoring treatment recommendations, as these classifications directly influence clinical decision-making. Brain tumor diagnosis is complex and often necessitates specialized expertise, which may not be accessible to all patients in a timely manner. This tool seeks to bridge that gap by providing an accessible and precise diagnostic aid.
 
-Brain tumors are very difficult to detect when in early stage, and often require the attention of highly trained specialists to properly diagnose. For large demographics, it may be difficult to access this type of expertise in a timely manner.
-Structure
-
-With the business case in mind, we set out to:
-
-1-	(Data) collect a large dataset of MRI scans with various degrees of brain tumor development, as well as  healthy brain. This should contain all possible information AI may need to learn to detect tumors. These images may need some degree of processing to make them intelligible by an algorithm
-2-	(Modeling) Select, assemble and train the correct statistical model for the type of task at hand: classification. This model will form the basis of the AI tool
-3-	(Diagnosis) Correctly issue a recommendation for a given, unseen, MRI scan. Is there a risk, estimated with reliable certainty, that the patient may have a malignant form of brain tumor in early stages of development, therefore needing the attention of a specialist?
-4-	(Production, Optional) If the main objective is achieved, the project would move on to the creation of a web-based AI tool which would incorporate the results of the model into an easily-digestible format. For this purpose, a chat-based framework has been selected, which would incorporate natural language processing (NLP) in the structure of the project.
 
 Structure
 
-1-	Collectively or individually build a basic model trained locally (2 days)
-2-	Select the best performing model and review it collectively (1 day)
-3-	Start the production phase of the model while the model gets further improved (2 days). The model will then replace the basic one
-4
+With a focus on addressing the challenges of subtype differentiation, we structured the project as follows:
+
+Data Collection: Assemble a comprehensive dataset of MRI scans that includes several classes of brain tumor subtypes (e.g. pituitary, meningioma and glioma), as well as scans of healthy brains. The dataset should encompass all relevant features needed for AI to distinguish between different tumor types. Preprocessing may be required to ensure the data is algorithm-ready.
+
+Model Development: Select, build, and train a CNN model tailored for the classification task. The model will serve as the core of the AI tool, capable of recognizing and differentiating tumor subtypes.
+
+Prediction and Diagnosis: Develop the model to reliably predict the presence of a tumor and its subtype in unseen MRI scans. As a high percentage of gliomas are clinically classified as malignant, the prediction
+will serve as an indirect estimator of tumor malignancy.
+reduction will be an indirect estimator of tumor malignancy.
+Production Phase (Optional): If the model achieves the desired performance, create a web-based AI tool to present the results in an accessible format. A chat-based framework incorporating natural language processing (NLP) is planned to make the tool user-friendly.
+
+Timeline
+
+Initial Model Development: Build and train a basic model locally (2 days).
+Model Evaluation: Select the best-performing model and conduct a collective review (1 day).
+Production Integration: Begin the production phase while simultaneously refining the model and incorporating XAI features (
+Frontend Development: Develop a user-friendly web interface (2-3 days). days). The improved model will replace the initial version.
