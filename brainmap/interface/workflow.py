@@ -3,6 +3,7 @@ import os
 import requests
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from brainmap.ml_logic.data import load_mri_data
 from prefect import task, flow
 
 from taxifare.interface.main import evaluate, preprocess, train
@@ -88,9 +89,6 @@ if __name__ == "__main__":
 import os
 from prefect import task, flow
 
-# Assuming the necessary functions are imported or implemented:
-from mri_processing import load_mri_data, normalize_mri, one_hot_encode
-from ml_logic import initialize_model, train_model, evaluate_model, predict
 
 # Global constants (adjust these as necessary)
 TRAIN_DATA_DIR = "../data/raw_data/Training"
@@ -103,8 +101,14 @@ SEED = 42
 def load_data(train_data_dir, validation_split, image_size, batch_size, seed):
     """
     Load and preprocess the MRI data.
+
     """
-    return load_mri_data(train_data_dir, validation_split=VALIDATION_SPLIT, image_size=IMAGE_SIZE, batch_size=BATCH_SIZE, seed=SEED)
+    validation_split=VALIDATION_SPLIT
+    image_size=IMAGE_SIZE
+    batch_size=BATCH_SIZE
+    seed=SEED
+
+    return load_mri_data(train_data_dir, validation_split, image_size, batch_size, seed)
 
 @task
 def normalize_mri(dataset, label):
@@ -116,7 +120,7 @@ def train_model(train_data, val_data):
     Train a model on the given training and validation datasets.
     """
 
-    return train(data_path: str = "data/processed", split_ratio: float = 0.2, epochs: int = 50) -> float:
+    return train(data_path = "data/processed", split_ratio  = 0.2, epochs = 50)
 
 @task
 def evaluate_model(model_path, val_data):
@@ -139,7 +143,7 @@ def mri_fixed_model_flow(image_path=None):
     If `image_path` is provided, it predicts the class of the uploaded image.
     """
     # Load and preprocess the data
-    train_data, val_data = load_and_preprocess_data.submit(
+    train_data, val_data = load_mri_data.submit(
         train_data_dir=TRAIN_DATA_DIR,
         validation_split=VALIDATION_SPLIT,
         image_size=IMAGE_SIZE,
@@ -148,10 +152,10 @@ def mri_fixed_model_flow(image_path=None):
     )
 
     # Train the fixed model
-    fixed_model_path = train_fixed_model.submit(train_data=train_data, val_data=val_data)
+    fixed_model_path = train_model.submit(train_data=train_data, val_data=val_data)
 
     # Evaluate the fixed model
-    metrics = evaluate_fixed_model.submit(model_path=fixed_model_path, val_data=val_data)
+    metrics = evaluate_model.submit(model_path=fixed_model_path, val_data=val_data)
 
     print(f"🚀 Fixed model workflow complete. Final MAE: {metrics.result()['mae']}")
 
@@ -162,5 +166,5 @@ def mri_fixed_model_flow(image_path=None):
 
 if __name__ == "__main__":
     # Run the workflow and optionally pass an image path for prediction
-    user_image_path = "path/to/user/image.jpg"  # Replace with user-uploaded image path
+    user_image_path = "../../data/raw_data/Testing/glioma/Te-glTr_0000.jpg"  # Replace with user-uploaded image path
     mri_fixed_model_flow(image_path=user_image_path)
