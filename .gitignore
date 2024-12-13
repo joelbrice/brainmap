@@ -154,5 +154,20 @@ logs/
 *.rej
 *.sublime-project
 *.sublime-workspace
+# TensorBoard
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*.orig
+*.rej
+*.sublime-project
+*.sublime-workspace
 *.json
+
+# Ignore gcp folder
 gcp/
