@@ -37,7 +37,7 @@ image_placeholder = st.empty()
 uploaded_file = st.file_uploader("Choose an MRI image...", type=["tif", "tiff", "png", "jpg", "jpeg"])
 if uploaded_file is not None:
     st.image(uploaded_file, width=300, caption="Uploaded image")
-    if st.button('Get Prediction'):
+    if st.button('Get Prediction and the Probability of having a tumor'):
         # Loading bar starts here
         with st.spinner('Processing the image...'):
             my_bar = st.progress(0)
@@ -47,21 +47,25 @@ if uploaded_file is not None:
 
         # Proceed with the image processing and prediction
         img = uploaded_file.getvalue()
-        files = {"file": ("image.tiff", img, "image/tiff")}
+        files = {"file": ("image.jpeg", img, "image/jpeg")}
         response = requests.post(url, files=files)
         if response.status_code == 200:
             result = response.json()
-            if "Prediction" in result:
+            if "Prediction" in result and 'Probability' in result:
                 prediction = result["Prediction"]
+                probability = result["Probability"]
                 if prediction is not None:
                     pred = prediction * 100
+                    prob = probability * 100
                     if prediction < 0.5:
                         pred = 100 - pred
                         st.markdown(f"<h2 style='color:red;'>Tumor is detected</h2>", unsafe_allow_html=True)
-                        st.markdown(f"<h3 style='color:black;'>Probability: {pred:.2f}%</h3>", unsafe_allow_html=True)
+                        st.markdown(f"<h3 style='color:black;'>Prediction: {pred:.2f}%</h3>", unsafe_allow_html=True)
+                        st.markdown(f"<h3 style='color:black;'>Probability: {prob:.2f}%</h3>", unsafe_allow_html=True)
                     else:
                         st.markdown(f"<h2 style='color:green;'>No tumor detected</h2>", unsafe_allow_html=True)
-                        st.markdown(f"<h3 style='color:black;'>Probability: {pred:.2f}%</h3>", unsafe_allow_html=True)
+                        #st.markdown(f"<h3 style='color:black;'>Prediction: {pred:.2f}%</h3>", unsafe_allow_html=True)
+                        st.markdown(f"<h3 style='color:black;'>Probability: {prob:.2f}%</h3>", unsafe_allow_html=True)
                 else:
                     st.error("Error: Prediction value is None.")
             else:

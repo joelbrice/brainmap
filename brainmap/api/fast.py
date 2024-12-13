@@ -12,7 +12,7 @@ app.state.model = load_model()
 def root():
     return {'Root': "Welcome to BrainMap API"}
 
-@app.post("/predict_image")
+@app.post("/predict")
 async def create_upload_file(file: UploadFile):
     if not file:
         return {"message": "No upload file sent"}
@@ -22,5 +22,8 @@ async def create_upload_file(file: UploadFile):
 
         expanded_array_img = np.expand_dims(image, axis=0)
         prediction = app.state.model.predict(expanded_array_img)
-        res = round(float(prediction[0][0]), 4)
-        return {"Prediction": res}
+        probability = app.state.model.predict_proba(expanded_array_img)
+        pred = round(float(prediction[0][0]), 4)
+        probability = round(float(probability[0][0]), 4)
+
+        return {"Prediction": pred, "Probability": probability}
