@@ -154,3 +154,5 @@ logs/
 *.rej
 *.sublime-project
 *.sublime-workspace
+*.json
+gcp/
