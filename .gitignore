@@ -2,3 +2,5 @@ raw_data/
 Labeled-MRI-Brain-Tumor-Dataset-1
 .env
 .Zone.Identifier
+checkpoints/
+logs/
