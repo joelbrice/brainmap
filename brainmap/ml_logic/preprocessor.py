@@ -1,4 +1,3 @@
-
 ######## DATA PREPROCESSING ######## MARKUS/JOEL/ANTONIO
 # second set of functions to execute
 # anything related to manipulating input data before modeling
@@ -6,6 +5,8 @@
 # IMPORTS
 # normalize_mri
 import tensorflow as tf
+from PIL import Image
+import numpy as np
 
 ######## normalize_mri ######## MARKUS/JOEL/ANTONIO
 # ----> USE .MAP METHOD TO APPLY TO BATCHDATASET <----
@@ -40,3 +41,27 @@ def one_hot_encode(dataset, label):
     # Assuming 'num_classes' is defined
     class_names = dataset.class_names
     return dataset, tf.one_hot(label, depth=len(class_names))
+
+
+def preprocess_image(image: Image.Image, target_size: tuple = (128, 128)) -> np.ndarray:
+    """
+    Resize and normalize the image.
+    Args:
+        image (Image.Image): The input image.
+        target_size (tuple): The target size for resizing the image.
+    Returns:
+        np.ndarray: The preprocessed image.
+    """
+    # Resize the image
+    image = image.resize(target_size)
+
+    # Convert the image to a NumPy array
+    image_array = np.array(image)
+
+    # Normalize the image
+    image_array = image_array / 255.0
+
+    # Add batch dimension
+    image_array = np.expand_dims(image_array, axis=0)
+
+    return image_array

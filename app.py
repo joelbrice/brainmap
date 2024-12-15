@@ -60,7 +60,7 @@ if uploaded_file is not None:
                     if prediction < 0.5:
                         pred = 100 - pred
                         st.markdown(f"<h2 style='color:red;'>Tumor is detected</h2>", unsafe_allow_html=True)
-                        st.markdown(f"<h3 style='color:black;'>Prediction: {pred:.2f}%</h3>", unsafe_allow_html=True)
+                        st.markdown(f"<h3 style='color:black;'>Prediction is in: {pred:.2f}</h3>", unsafe_allow_html=True)
                         st.markdown(f"<h3 style='color:black;'>Probability: {prob:.2f}%</h3>", unsafe_allow_html=True)
                     else:
                         st.markdown(f"<h2 style='color:green;'>No tumor detected</h2>", unsafe_allow_html=True)

@@ -5,24 +5,32 @@ import time
 import pickle
 from brainmap.params import *
 
-def load_model() -> keras.Model:
-    model = keras.models.load_model(
-    os.path.join('models','cnn_model.pkl'),
-    compile=False)
-    print("✅ Model loaded successfully!")
+def load_model(model_path="../api/checkpoints/best_model.keras") -> keras.Model:
+    """
+    Load the model from the specified path.
+    """
+    print(f"Attempting to load model from: {model_path}")
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"No such file or directory: '{model_path}'")
 
-    return model
+    try:
+        model = keras.models.load_model(model_path)
+        print("Model loaded successfully.")
+        return model
+    except Exception as e:
+        print(f"Error loading model: {e}")
+        raise OSError(f"Unable to load model from '{model_path}': {e}")
 
 def save_model(model: keras.Model = None) -> None:
     """
     Persist trained model locally on the hard drive at f"{LOCAL_REGISTRY_PATH}/models/{timestamp}.h5"
-    - if MODEL_TARGET='gcs', also persist it in your bucket on GCS at "models/{timestamp}.h5" --> unit 02 only
-   """
+    - if MODEL_TARGET='gcs', also persist it in your bucket on GCS at "models/{timestamp}.keras" --> unit 02 only
+    """
 
     timestamp = time.strftime("%Y%m%d-%H%M%S")
 
     # Save model locally
-    model_path = os.path.join(LOCAL_REGISTRY_PATH, "models", f"{timestamp}.pkl")
+    model_path = os.path.join(LOCAL_REGISTRY_PATH, "models", f"{timestamp}.keras")
     model.save(model_path)
 
     if MODEL_TARGET == "gcs":
@@ -40,20 +48,11 @@ def save_results(params: dict, metrics: dict) -> None:
     """
     Persist params & metrics locally on the hard drive at
     "{LOCAL_REGISTRY_PATH}/params/{current_timestamp}.pickle"
-    "{LOCAL_REGISTRY_PATH}/metrics/{current_timestamp}.pickle"
-    - (unit 03 only)
     """
-
     timestamp = time.strftime("%Y%m%d-%H%M%S")
+    results_path = os.path.join(LOCAL_REGISTRY_PATH, "params", f"{timestamp}.pickle")
 
-    # Save params locally
-    if params is not None:
-        params_path = os.path.join(LOCAL_REGISTRY_PATH, "params", timestamp + ".pkl")
-        with open(params_path, "wb") as file:
-            pickle.dump(params, file)
+    with open(results_path, "wb") as f:
+        pickle.dump({"params": params, "metrics": metrics}, f)
 
-    # Save metrics locally
-    if metrics is not None:
-        metrics_path = os.path.join(LOCAL_REGISTRY_PATH, "metrics", timestamp + ".pkl")
-        with open(metrics_path, "wb") as file:
-            pickle.dump(metrics, file)
+    print(f"Results saved to {results_path}")

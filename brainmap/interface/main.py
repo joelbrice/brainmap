@@ -1,3 +1,4 @@
+import os
 import numpy as np
 from pathlib import Path
 
@@ -5,8 +6,30 @@ from colorama import Fore, Style
 
 from brainmap.ml_logic.data import load_mri_data
 # from brainmap.ml_logic.model import evaluate_model
-from brainmap.ml_logic.registry import load_model
+from tensorflow.keras.models import load_model
 
+checkpoint_dir = './checkpoints'
+tensorboard_log_dir = './logs'
+
+os.makedirs(checkpoint_dir, exist_ok=True)
+os.makedirs(tensorboard_log_dir, exist_ok=True)
+# Load the best model
+cnn_model_path = os.path.join(checkpoint_dir, 'best_model.keras')
+cnn_model_path
+
+cnn_model = load_model(cnn_model_path)
+
+# Evaluate on test data
+test_loss, test_accuracy, test_auc, test_precision, test_recall = cnn_model.evaluate(X_test, verbose=1)
+print(f"Test Accuracy: {test_accuracy:.4f}")
+
+
+import requests
+
+url = "http://127.0.0.1:8000/predict"
+files = {'file': open('/home/joelbrice/code/joelbrice/brainmap/data/raw_data/Testing/glioma/Te-gl_0010.jpg', 'rb')}
+response = requests.post(url, files=files)
+print(response.json())
 
 def preprocess(data_path: str = "../../data/raw_data", output_path: str = "../../data/processed") -> None:
     print(Fore.MAGENTA + "\n⭐️ Use case: preprocess" + Style.RESET_ALL)
