@@ -1,4 +1,3 @@
-
 import streamlit as st
 import requests
 import time
@@ -27,7 +26,7 @@ st.markdown('<p class="big-font">Welcome to Brainmap, a platform for tumor detec
 '''
 
 # URL of the API
-url = 'https://' # SERVICE_URL
+url = 'http://127.0.0.1:8000/predict'  # Update this to the correct URL of your FastAPI server
 
 
 # Placeholder for the image
@@ -42,7 +41,7 @@ if uploaded_file is not None:
         with st.spinner('Processing the image...'):
             my_bar = st.progress(0)
             for percent_complete in range(100):
-                time.sleep(0.1)
+                time.sleep(0.01)
                 my_bar.progress(percent_complete + 1)
 
         # Proceed with the image processing and prediction
@@ -55,17 +54,11 @@ if uploaded_file is not None:
                 prediction = result["Prediction"]
                 probability = result["Probability"]
                 if prediction is not None:
-                    pred = prediction * 100
-                    prob = probability * 100
-                    if prediction < 0.5:
-                        pred = 100 - pred
-                        st.markdown(f"<h2 style='color:red;'>Tumor is detected</h2>", unsafe_allow_html=True)
-                        st.markdown(f"<h3 style='color:black;'>Prediction is in: {pred:.2f}</h3>", unsafe_allow_html=True)
-                        st.markdown(f"<h3 style='color:black;'>Probability: {prob:.2f}%</h3>", unsafe_allow_html=True)
-                    else:
+                    if prediction == 'notumor':
                         st.markdown(f"<h2 style='color:green;'>No tumor detected</h2>", unsafe_allow_html=True)
-                        #st.markdown(f"<h3 style='color:black;'>Prediction: {pred:.2f}%</h3>", unsafe_allow_html=True)
-                        st.markdown(f"<h3 style='color:black;'>Probability: {prob:.2f}%</h3>", unsafe_allow_html=True)
+                    else:
+                        st.markdown(f"<h2 style='color:red;'>Tumor detected: {prediction}</h2>", unsafe_allow_html=True)
+                    st.markdown(f"<h3 style='color:black;'>Probability: {probability * 100:.2f}%</h3>", unsafe_allow_html=True)
                 else:
                     st.error("Error: Prediction value is None.")
             else:
