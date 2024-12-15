@@ -5,16 +5,19 @@
 
 # IMPORTS
 # initialize_model
+from typing import Tuple
 import tensorflow as tf
-from tensorflow.keras import regularizers, models, layers
+from tensorflow.keras import models, layers, Model
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.losses import CategoricalCrossentropy
+from keras.losses import CategoricalCrossentropy
 from tensorflow.keras.metrics import Precision, Recall, AUC
 
 # train_model
 import os
 from colorama import Fore, Style
-from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau, TensorBoard
+from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
+
+from brainmap.params import BATCH_SIZE, EPOCHS, OPTIMIZER_LEARNING_RATE, REGULARIZER
 
 ######## initialize_model ######## JOEL/ANTONIO
 # Description: initializes the desired model.
@@ -76,8 +79,7 @@ def compile_model(model: Model, learning_rate = OPTIMIZER_LEARNING_RATE) -> Mode
     optimizer = Adam(learning_rate=learning_rate)
     loss = CategoricalCrossentropy(from_logits=False)
 
-    model.compile(optimizer= optimizer, loss=loss,
-                  metrics=['accuracy', Precision(name='precision'), Recall(name='recall'), AUC(name='auc')])
+    model.compile(optimizer= optimizer, loss=loss, metrics=['accuracy', Precision(name='precision'), Recall(name='recall'), AUC(name='auc')])
 
     print("✅ Model compiled")
 
@@ -95,13 +97,11 @@ def compile_model(model: Model, learning_rate = OPTIMIZER_LEARNING_RATE) -> Mode
 #       train the model with callbacks and storing the training history
 #       return a tuple with the fitted model and the history of results
 # Libraries: tensorflow, colorama, os, tensorflow.keras.callbacks
-def train_model(
-        model: tf.keras.Model,
-        X_train: tf.data.Dataset,
-        X_val: tf.data.Dataset,
-        batch_size: int = BATCH_SIZE,
-        patience: int = PATIENCE
-        epochs = EPOCHS
+def train_model(model: tf.keras.Model,
+        x_train: tf.data.Dataset,
+        x_val: tf.data.Dataset,
+        batch_size: int ,
+        patience: int
     ) -> Tuple[tf.keras.Model, dict]:
 
     print(Fore.BLUE + "\nTraining model..." + Style.RESET_ALL)
@@ -119,9 +119,9 @@ def train_model(
     ]
 
     history = model.fit(
-        X_train,
-        validation_data=X_val,
-        epochs=epochs,
+        x_train,
+        validation_data=x_val,
+        epochs=EPOCHS,
         batch_size=batch_size,
         callbacks=callbacks,
         verbose=1

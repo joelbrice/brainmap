@@ -1,32 +1,20 @@
-# $DEL_BEGIN
+# Use the official Python 3.10 image
+FROM python:3.10
 
-# ####### 👇 SIMPLE SOLUTION (x86 and M1) 👇 ########
-# FROM python:3.10.6-buster
-
-# WORKDIR /prod
-
-# COPY requirements.txt requirements.txt
-# RUN pip install -r --no-cache-dir requirements.txt
-
-# COPY taxifare taxifare
-
-# CMD uvicorn taxifare.api.fast:app --host 0.0.0.0 --port $PORT
-
-####### 👇 OPTIMIZED SOLUTION (x86)👇 #######
-
-# tensorflow base-images are optimized: lighter than python-buster + pip install tensorflow
-FROM tensorflow/tensorflow:2.10.0
-# OR for apple silicon, use this base image, but it's larger than python-buster + pip install tensorflow
-# FROM armswdev/tensorflow-arm-neoverse:r22.09-tf-2.10.0-eigen
-
+# Set the working directory
 WORKDIR /prod
 
+# Copy the requirements file
+COPY requirements.txt /prod/requirements.txt
 
-COPY requirements_prod.txt requirements.txt
+# Install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy the application code
 COPY brainmap brainmap
 
+# Set environment variables
 ENV PORT=8000
 
-CMD uvicorn brainmap.api.fast:app --host 0.0.0.0 --port $PORT
+# Command to run the application
+CMD ["uvicorn", "brainmap.api.fast:app", "--host", "0.0.0.0", "--port", "$PORT"]
