@@ -14,7 +14,7 @@ from io import BytesIO
 app = FastAPI()
 app.state.model = load_model("brainmap/api/checkpoints/best_model.keras")
 
-class_names = np.array(['glioma', 'meningioma', 'pituitary', 'notumor'])
+class_names = np.array(['glioma', 'meningioma', 'notumor', 'pituitary'])
 
 @app.get("/")
 def root():
