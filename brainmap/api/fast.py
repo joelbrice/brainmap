@@ -18,7 +18,7 @@ class_names = np.array(['glioma', 'meningioma', 'notumor', 'pituitary'])
 
 @app.get("/")
 def root():
-    return {'Root': "Welcome to BrainMap API"}
+    return {"Welcome to BrainMap API"}
 
 @app.post("/predict")
 async def create_upload_file(file: UploadFile):
