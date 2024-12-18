@@ -13,4 +13,4 @@ RUN pip install --upgrade pip && pip install --no-cache-dir -r /prod/requirement
 
 ENV PORT=8000
 
-CMD uvicorn brainmap.api.fast:app --host 0.0.0.0 --port $PORT
+CMD ["uvicorn", "brainmap.api.fast:app", "--host", "0.0.0.0", "--port", "$PORT"]
